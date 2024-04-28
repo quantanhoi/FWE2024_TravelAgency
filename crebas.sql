@@ -44,7 +44,7 @@ drop table if exists Zeitraum cascade;
 /* Table: Reise                                                 */
 /*==============================================================*/
 create table Reise (
-   r_id                 integer              not null,
+   r_id                 serial integer              not null,
    z_id                 integer              not null,
    r_Name               varchar(254),
    r_Beschreibung       varchar(254),
@@ -101,7 +101,7 @@ rz_id
 /* Table: Reiseziel                                             */
 /*==============================================================*/
 create table Reiseziel (
-   rz_id                integer              not null,
+   rz_id                serial integer              not null,
    z_id                 integer              not null,
    rz_Name              varchar(254),
    rz_Beschreibung      varchar(254),
@@ -127,7 +127,7 @@ z_id
 /* Table: Teilnehmer                                            */
 /*==============================================================*/
 create table Teilnehmer (
-   t_id                 integer              not null,
+   t_id                 serial integer              not null,
    t_Name               varchar(254),
    constraint PK_TEILNEHMER primary key (t_id)
 );
@@ -174,7 +174,7 @@ t_id
 /* Table: Zeitraum                                              */
 /*==============================================================*/
 create table Zeitraum (
-   z_id                 integer              not null,
+   z_id                 serial integer              not null,
    z_startDate          timestamp,
    z_endDate            timestamp,
    constraint PK_ZEITRAUM primary key (z_id)

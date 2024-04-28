@@ -1,4 +1,6 @@
-import {PrimaryKey, Property} from '@mikro-orm/core';
+import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
+
+@Entity()
 export class Zeitraum {
     @PrimaryKey()
     z_id!: number;

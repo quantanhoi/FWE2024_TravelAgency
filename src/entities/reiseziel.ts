@@ -1,5 +1,5 @@
-import {PrimaryKey, Property} from '@mikro-orm/core';
-
+import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
+@Entity()
 export class Reiseziel {
     @PrimaryKey()
     rz_id!: number;
