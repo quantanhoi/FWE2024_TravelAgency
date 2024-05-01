@@ -1,5 +1,7 @@
-import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
-@Entity()
+import { Entity, PrimaryKey, Property, ManyToMany, Collection } from '@mikro-orm/core';
+import { Reiseziel } from './reiseziel';
+
+@Entity({tableName: 'reise'})
 export class Reise {
     @PrimaryKey()
     r_id!: number;
@@ -13,4 +15,17 @@ export class Reise {
     @Property()
     r_Bild!: Date;
 
+    // @ManyToMany( {
+    //     owner: true,
+    //     pivotTable: 'reise_reiseziel' //name of pivot table
+    // })
+    // reiseziels = new Collection<Reiseziel>(this);
+
+    @ManyToMany(() => Reiseziel, reiseziel => reiseziel.reises, {
+        owner: true,
+        pivotTable: 'reise_reiseziel',
+        joinColumns: ['r_id'],  // Correct column references
+        inverseJoinColumns: ['rz_id']
+    })
+    reiseziels = new Collection<Reiseziel>(this);
 }

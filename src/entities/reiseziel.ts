@@ -1,5 +1,6 @@
-import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
-@Entity()
+import {Collection, Entity, ManyToMany, PrimaryKey, Property} from '@mikro-orm/core';
+import { Reise } from './reise';
+@Entity({tableName: 'reiseziel'})
 export class Reiseziel {
     @PrimaryKey()
     rz_id!: number;
@@ -9,4 +10,11 @@ export class Reiseziel {
     rz_Beschreibung!: string;
     @Property()
     rz_Bild!: string;
+    // @ManyToMany(() => Reise, 'reiseziels', {
+    //     mappedBy: 'reiseziels'
+    // })
+    // reises = new Collection<Reise>(this);
+    @ManyToMany(() => Reise, reise => reise.reiseziels)
+    reises = new Collection<Reise>(this);
+
 }
