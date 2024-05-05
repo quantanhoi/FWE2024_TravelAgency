@@ -1,5 +1,5 @@
-import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
-
+import {Entity, PrimaryKey, Property, ManyToMany, Collection} from '@mikro-orm/core';
+import { Reise } from './reise';
 @Entity()
 export class Teilnehmer {
     @PrimaryKey()
@@ -7,4 +7,7 @@ export class Teilnehmer {
 
     @Property()
     t_Name!: string;
+
+    @ManyToMany(() => Reise, reise => reise.teilnehmers)
+    reises = new Collection<Reise>(this);
 }

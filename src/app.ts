@@ -3,7 +3,7 @@
 
 import { MikroORM } from '@mikro-orm/core';
 import defineConfig from './mikro-orm.config'
-import * as ReiseMethod from './utils/method'
+import * as ReiseMethod from './utils/reiseMethod'
 async function main() {
     // const orm = await MikroORM.init(defineConfig);  // init using defined config in mikro-orm.config.ts
     // const em = orm.em.fork();  // Create a forked EntityManager

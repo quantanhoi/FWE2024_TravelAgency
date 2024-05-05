@@ -1,5 +1,6 @@
 import { Entity, PrimaryKey, Property, ManyToMany, Collection } from '@mikro-orm/core';
 import { Reiseziel } from './reiseziel';
+import { Teilnehmer } from './teilnehmer';
 
 @Entity({tableName: 'reise'})
 export class Reise {
@@ -28,4 +29,14 @@ export class Reise {
         inverseJoinColumns: ['rz_id']
     })
     reiseziels = new Collection<Reiseziel>(this);
+
+
+    //reise is the owner of the relationship
+    @ManyToMany(() => Teilnehmer, teilnehmer => teilnehmer.reises, {
+        owner: true,
+        pivotTable: 'teilnehmer_reise',
+        joinColumns: ['r_id'],
+        inverseJoinColumns: ['t_id']
+    })
+    teilnehmers = new Collection<Teilnehmer>(this);
 }
