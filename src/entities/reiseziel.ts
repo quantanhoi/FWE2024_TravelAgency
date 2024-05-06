@@ -10,10 +10,7 @@ export class Reiseziel {
     rz_Beschreibung!: string;
     @Property()
     rz_Bild!: string;
-    // @ManyToMany(() => Reise, 'reiseziels', {
-    //     mappedBy: 'reiseziels'
-    // })
-    // reises = new Collection<Reise>(this);
+
     @ManyToMany(() => Reise, reise => reise.reiseziels)
     reises = new Collection<Reise>(this);
 

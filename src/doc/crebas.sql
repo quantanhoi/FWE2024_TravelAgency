@@ -225,12 +225,6 @@ $$ LANGUAGE plpgsql;
 
 
 
--- Trigger for updates on Reiseziel
-CREATE TRIGGER trg_update_zeitraum_after_insert_or_update
-AFTER INSERT OR UPDATE ON Reiseziel
-FOR EACH ROW
-EXECUTE FUNCTION update_zeitraum();
-
 -- Trigger for updates on the linking table if entries are added or removed
 CREATE TRIGGER trg_update_zeitraum_after_link_update
 AFTER INSERT OR UPDATE OR DELETE ON Reise_Reiseziel
