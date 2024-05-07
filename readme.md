@@ -6,3 +6,5 @@ npm install @mikro-orm/core \
             fastify
 npm i --save-dev @types/express
 ```
+Structure of the database
+![database](src/doc/database.png)
