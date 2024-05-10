@@ -193,7 +193,7 @@ add
 
 
 
-
+--Trigger to automatically update Reise zeitraum startDate and endDate according to reiseziel List
 CREATE OR REPLACE FUNCTION update_zeitraum()
 RETURNS TRIGGER AS $$
 BEGIN

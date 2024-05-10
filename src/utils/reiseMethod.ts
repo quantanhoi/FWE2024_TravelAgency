@@ -15,6 +15,10 @@ export async function getAllReise(): Promise<Reise[]> {
         });
         return reise;
     }
+    catch(error){
+        console.error('Failed to fetch Reise:', error);
+        throw error;
+    }
     finally{
         await orm.close();
     }
@@ -35,18 +39,24 @@ export async function printAllReise(reise: Reise[]): Promise<void> {
 }
 
 
-export async function getReiseById(id: number): Promise<void> {
+export async function getReiseById(id: number): Promise<Reise|null> {
     const orm = await MikroORM.init(defineConfig);
-    const em = orm.em.fork();
-    const reise = await em.findOne(Reise, { r_id: id }, {
-        populate: ['reiseziels', 'teilnehmers'],  // Explicitly populate reiseziels
-        strategy: LoadStrategy.JOINED  // Using JOIN strategy to fetch related entities
-    });
-    console.log(`Reise ID: ${reise?.r_id}, Name: ${reise?.r_Name}`);
-    reise?.reiseziels.getItems().forEach(rz => {
-        console.log(`Reiseziel ID: ${rz.rz_id}, Name: ${rz.rz_Name}`);
-    });
-    await orm.close();
+    try{
+        const em = orm.em.fork();
+        const reise: Reise|null = await em.findOne(Reise, { r_id: id }, {
+            populate: ['reiseziels', 'teilnehmers'],  // Explicitly populate reiseziels
+            strategy: LoadStrategy.JOINED  // Using JOIN strategy to fetch related entities
+        });
+        // console.log(`Reise ID: ${reise?.r_id}, Name: ${reise?.r_Name}`);
+        return reise;
+    }
+    catch(error){
+        console.error('Failed to fetch Reise:', error);
+        throw error;
+    }
+    finally{
+        await orm.close();
+    }
 }
 
 
@@ -59,3 +69,4 @@ export async function createReise(reise: Reise): Promise<void> {
     await orm.close();
 }
 
+//TODO: add function to create new reise in the database

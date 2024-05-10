@@ -2,6 +2,12 @@ import { LoadStrategy, MikroORM } from "@mikro-orm/postgresql";
 import defineConfig from '../mikro-orm.config'
 import { Reiseziel} from "../entities/reiseziel";
 
+
+/**
+ * function to fetch all reiseziel from the database
+ * @returns array list of reiseziel in the database (no limit) 
+ * @tested
+ */
 export async function getAllReiseziel(): Promise<Reiseziel[]> {
     const orm = await MikroORM.init(defineConfig);
     try{
@@ -17,6 +23,13 @@ export async function getAllReiseziel(): Promise<Reiseziel[]> {
     
 }
 
+
+/**
+ * Function to get a single reiseziel by id from the database
+ * @param rz_id id of reiseziel
+ * @returns reiseziel by that id
+ * @tested
+ */
 export async function getReisezielById(rz_id: number): Promise<Reiseziel | null> {
     const orm = await MikroORM.init(defineConfig); // Ensure MikroORM is initialized with the right config
     try {
@@ -31,3 +44,5 @@ export async function getReisezielById(rz_id: number): Promise<Reiseziel | null>
         await orm.close(); // Ensure the ORM is closed after the operation
     }
 }
+
+//TODO: add function to add extra reiseziel to database
