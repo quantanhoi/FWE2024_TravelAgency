@@ -3,7 +3,7 @@ import defineConfig from '../mikro-orm.config'
 
 import { Teilnehmer } from "../entities/teilnehmer";
 
-export async function getAllReiseziel(): Promise<Teilnehmer[]> {
+export async function getAllTeilnehmers(): Promise<Teilnehmer[]> {
     const orm = await MikroORM.init(defineConfig);
     try{
         const em = orm.em.fork();
@@ -19,7 +19,7 @@ export async function getAllReiseziel(): Promise<Teilnehmer[]> {
 }
 
 
-async function getAllTeilnehmers(t_id: number): Promise<Teilnehmer | null> //return either Teilnehmer or null, same with Teilnehmer? in C#
+export async function getTeilnehmerById(t_id: number): Promise<Teilnehmer | null> //return either Teilnehmer or null, same with Teilnehmer? in C#
 { 
     const orm = await MikroORM.init(defineConfig); // Ensure MikroORM is initialized with the right config
     try {
