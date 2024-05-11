@@ -22,7 +22,7 @@ INSERT INTO Reise (z_id, r_Name, r_Beschreibung, r_Bild) VALUES
 INSERT INTO Reiseziel (z_id, rz_Name, rz_Beschreibung, rz_Bild) VALUES
 (1, 'Brandenburg Gate', 'Iconic 18th-century gate', 'brandenburg.jpg'),
 (2, 'Neuschwanstein Castle', '19th-century hilltop fairytale castle', 'neuschwanstein.jpg'),
-(3, 'Lake Titisee', 'Popular lake in the Black Forest', 'titisee.jpg');
+(3, 'Lake Titisee', 'Popular lake in the Black Forest', 'titisee.jpg'),
 (4, 'Berliner Fernsehturm', 'Iconic TV tower in Berlin', 'fernsehturm.jpg');  --extra data to test trigger function
 
 

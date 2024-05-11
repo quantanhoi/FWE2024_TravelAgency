@@ -1,4 +1,4 @@
-import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
+import {Entity, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
 
 @Entity()
 export class Zeitraum {
@@ -10,4 +10,6 @@ export class Zeitraum {
 
     @Property()
     z_endDate!: Date;
+
+    
 }

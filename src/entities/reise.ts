@@ -16,11 +16,6 @@ export class Reise {
     @Property()
     r_Bild!: Date;
 
-    // @ManyToMany( {
-    //     owner: true,
-    //     pivotTable: 'reise_reiseziel' //name of pivot table
-    // })
-    // reiseziels = new Collection<Reiseziel>(this);
 
     @ManyToMany(() => Reiseziel, reiseziel => reiseziel.reises, {
         owner: true,

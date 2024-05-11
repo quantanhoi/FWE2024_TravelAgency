@@ -4,17 +4,14 @@
 import { MikroORM } from '@mikro-orm/core';
 import defineConfig from './mikro-orm.config'
 import * as ReiseMethod from './utils/reiseMethod'
-async function main() {
-    // const orm = await MikroORM.init(defineConfig);  // init using defined config in mikro-orm.config.ts
-    // const em = orm.em.fork();  // Create a forked EntityManager
-
-    // // Now use `em` to run your queries (like JPA)
-    // const teilnehmers = await em.find(Teilnehmer, {});
-    // teilnehmers.forEach(teilnehmer => console.log(teilnehmer.t_Name));
-
-    // await orm.close();
-    ReiseMethod.getAllReise();
-
-}
-
-main().catch(console.error);
+import express from 'express';
+import reiseRoute from './routes/api/reise';
+import reisezielRoute from './routes/api/reiseziel';
+const app = express();
+const port = 3000;
+app.use(express.json());
+app.use('/api/reise', reiseRoute);
+app.use('/api/reiseziel', reisezielRoute);
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});
