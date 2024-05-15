@@ -1,6 +1,7 @@
-import { Entity, PrimaryKey, Property, ManyToMany, Collection } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, ManyToMany, Collection, OneToOne } from '@mikro-orm/core';
 import { Reiseziel } from './reiseziel';
 import { Teilnehmer } from './teilnehmer';
+import { Zeitraum } from './zeitraum';
 
 @Entity({tableName: 'reise'})
 export class Reise {
@@ -8,13 +9,16 @@ export class Reise {
     r_id!: number;
 
     @Property()
-    r_Name!: string;
+    r_name!: string;
 
     @Property()
-    r_Beschreibung!: string;
+    r_beschreibung!: string;
 
     @Property()
-    r_Bild!: Date;
+    r_bild!: string;
+
+    @OneToOne(() => Zeitraum, {joinColumn: 'z_id'})
+    zeitraum!: Zeitraum;
 
 
     @ManyToMany(() => Reiseziel, reiseziel => reiseziel.reises, {
@@ -34,4 +38,12 @@ export class Reise {
         inverseJoinColumns: ['t_id']
     })
     teilnehmers = new Collection<Teilnehmer>(this);
+
+
+    constructor(r_name: string, r_beschreibung: string, r_bild: string, zeitraum: Zeitraum) {
+        this.r_name = r_name;
+        this.r_beschreibung = r_beschreibung;
+        this.r_bild =  r_bild;
+        this.zeitraum = zeitraum;
+    }
 }

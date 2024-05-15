@@ -28,7 +28,7 @@ export async function getAllReise(): Promise<Reise[]> {
 
 export async function printAllReise(reise: Reise[]): Promise<void> {
     reise.forEach(r => {
-        console.log(`Reise ID: ${r.r_id}, Name: ${r.r_Name}`);
+        console.log(`Reise ID: ${r.r_id}, Name: ${r.r_name}`);
         r.reiseziels.getItems().forEach(rz => {
             console.log(`Reiseziel ID: ${rz.rz_id}, Name: ${rz.rz_Name}`);
         });
@@ -62,11 +62,25 @@ export async function getReiseById(id: number): Promise<Reise|null> {
 
 export async function createReise(reise: Reise): Promise<void> {
     const orm = await MikroORM.init(defineConfig);
-    const em = orm.em.fork();
-    em.persist(reise);
-    await em.flush();
-    console.log('Reise created successfully');
-    await orm.close();
+    try {
+        const em = orm.em.fork();
+        const zeitraum = reise.zeitraum;
+        console.log('Zeitraum für Reise creating........');
+        em.persist(zeitraum);
+        await em.flush();
+        console.log('Zeitraum für Reise created successfully');
+        em.persist(reise);
+        await em.flush();
+        console.log('Reise created successfully');
+    }
+    catch (error) {
+        console.error('Failed to Push Reise');
+        throw error;
+    }
+    finally{
+        await orm.close();
+    }
+    
 }
 
 //TODO: add function to create new reise in the database

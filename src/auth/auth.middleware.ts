@@ -49,20 +49,16 @@ export async function comparePasswordWithHash(password: string, hash: string) {
         return false;
     }
 }
-export async function registerUser(email: string, name: string, password: string): Promise<boolean> {
+export async function registerUser(email: string, name: string, password: string): Promise<void> {
     try {
         const hashedPassword = await hashPassword(password);
         const newUser = new UserData(email, name, hashedPassword);
-        if(await userMethod.pushUser(newUser)) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        await userMethod.pushUser(newUser)
+        
     }
     catch(error ) {
         console.error('Failed to register User');
-        return false;
+        throw error;
     }
     
 }
