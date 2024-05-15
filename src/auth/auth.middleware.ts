@@ -1,10 +1,10 @@
-import { userData } from "../entities/user";
+import { UserData } from "../entities/user";
 import * as bcrypt from 'bcryptjs';
 import jwt, {JwtPayload, SignOptions} from 'jsonwebtoken';
 import express, { NextFunction, Request, RequestHandler, Response } from 'express';
 import * as userMethod from '../utils/userMethod';
 
-const FWE_SALT = '10';
+
 const FWE_SECRET = 'SECRET_KEY';
 const FWE_OPTIONS: SignOptions = {
     expiresIn: '1h',
@@ -14,14 +14,23 @@ const FWE_OPTIONS: SignOptions = {
 declare global {
     namespace Express {
             interface Request {
-                user: userData|null;
+                user: UserData|null;
                 token: JWTToken|null;
             }
         }
 }
-export type JWTToken = userData & JwtPayload
+export type JWTToken = UserData & JwtPayload
 
-const hashPassword = (password: string) => bcrypt.hash(password, FWE_SALT);
+// Generate a new salt
+const generateSalt = async () => {
+    return await bcrypt.genSalt(12);  // 12 is the cost factor
+};
+
+// Use this generated salt when hashing passwords
+const hashPassword = async (password: string) => {
+    const salt = await generateSalt();
+    return bcrypt.hash(password, salt);
+};
 
 // const comparePasswordWithHash = async (password: string, hash: string) => {
 //     try {
@@ -40,14 +49,25 @@ export async function comparePasswordWithHash(password: string, hash: string) {
         return false;
     }
 }
-export async function registerUser(email: string, name: string, password: string): Promise<userData> {
-    const hashedPassword = await hashPassword(password);
-    const newUser = new userData(email, name, hashedPassword);
-    //TODO: push the new user here
-    return newUser;
+export async function registerUser(email: string, name: string, password: string): Promise<boolean> {
+    try {
+        const hashedPassword = await hashPassword(password);
+        const newUser = new UserData(email, name, hashedPassword);
+        if(await userMethod.pushUser(newUser)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    catch(error ) {
+        console.error('Failed to register User');
+        return false;
+    }
+    
 }
 
-export function generateToken(user: userData): string {
+export function generateToken(user: UserData): string {
     const token = jwt.sign({ email: user.u_email, name: user.u_name }, FWE_SECRET, FWE_OPTIONS);
     return token;
 }

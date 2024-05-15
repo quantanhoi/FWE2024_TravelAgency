@@ -230,3 +230,13 @@ CREATE TRIGGER trg_update_zeitraum_after_link_update
 AFTER INSERT OR UPDATE OR DELETE ON Reise_Reiseziel
 FOR EACH ROW
 EXECUTE FUNCTION update_zeitraum();
+
+
+--user for JWT test
+CREATE TABLE userData(
+	u_id serial not null,
+	u_email varchar(254) not null,
+	u_name varchar(254) not null,
+	u_password varchar(512) not null,
+   UNIQUE(u_email)
+);

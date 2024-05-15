@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property, ManyToMany, Collection } from '@mikro-orm/core';
 
-@Entity({tableName: 'user'})
-export class userData {
+@Entity({tableName: 'userdata'})
+export class UserData {
 
     @PrimaryKey()
     u_id!: number;
