@@ -1,3 +1,5 @@
+Fortgeschrittene Webentwicklung Hausaufgaben mit Typescript (Backend) und React (Frontend)
+
 ```
 tsc --init
 npm install @mikro-orm/core \
