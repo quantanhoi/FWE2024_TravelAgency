@@ -1,3 +1,4 @@
+
 import express, {Request, Response} from 'express';
 import * as ReiseMethod from '../../utils/reiseMethod';
 import {Reise} from '../../entities/reise';
@@ -10,7 +11,7 @@ const router = express.Router();
  * @returns all reise as json
  * @tested
  */
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
     try{
         console.log("GET REISE");
         const reise: Reise[] = await ReiseMethod.getAllReise();
@@ -29,7 +30,7 @@ router.get('/', async (req, res) => {
  * @returns specific reise object with id or null if not found
  * @tested
  */
-router.post('/:id(\\d+)', async (req, res) => {
+router.post('/:id(\\d+)', async (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
 
     try {
@@ -48,6 +49,12 @@ router.post('/:id(\\d+)', async (req, res) => {
     }
 });
 
+
+/**
+ * POST request to add reise
+ * @returns status of the request
+ * @tested
+ */
 router.post('/add', async(req:Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     try {
@@ -59,10 +66,10 @@ router.post('/add', async(req:Request, res: Response) => {
         }
         else  {
             //for Date format example, checkout data.sql in doc
-            const zeirtaum = new Zeitraum(new Date(startDate), new Date(endDate));
-            const reise = new Reise(name, beschreibung, bild, zeirtaum);
+            const zeitraum = new Zeitraum(new Date(startDate), new Date(endDate));
+            const reise = new Reise(name, beschreibung, bild, zeitraum);
             await ReiseMethod.createReise(reise);
-            return res.status(201).json({status: "Success registering user"});
+            return res.status(201).json({status: "Successfully adding reise"});
         }
     }
     catch (error) {
@@ -72,5 +79,40 @@ router.post('/add', async(req:Request, res: Response) => {
     }
 });
 
+
+/**
+    * POST request to delete reise by id
+    * @returns status of the request
+    * @tested
+    
+ */
+router.post('/delete/:id(\\d+)', async (req: Request, res: Response) => {
+    try {
+        console.log("Route delete Reise by id");
+        await ReiseMethod.deleteReiseById(parseInt(req.params.id));
+        res.status(200).json({status: "Reise deleted successfully"});
+    }
+    catch {
+        console.error('Request Failed to delete Reise');
+        res.status(500).json({ error: "Failed to delete Reise" });
+    }
+
+});
+
+/**
+ * POST request to to add reiseziel to reise by id of reiseziel and reise
+ * @tested
+ */
+router.post('/addReiseziel/:id(\\d+)/:idReiseziel(\\d+)', async (req: Request, res: Response) => {
+    try {
+        console.log("Route add Reiseziel to Reise");
+        await ReiseMethod.addReisezielToReise(parseInt(req.params.id), parseInt(req.params.idReiseziel));
+        res.status(200).json({status: "Reiseziel added to Reise successfully"});
+    }
+    catch {
+        console.error('Request Failed to add Reiseziel to Reise');
+        res.status(500).json({ error: "Failed to add Reiseziel to Reise" });
+    }
+});
 
 export default router;

@@ -1,10 +1,12 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import * as ReisezielMethod from '../../utils/reisezielMethod';
 import { Reiseziel } from '../../entities/reiseziel';
+import { Zeitraum } from '../../entities/zeitraum';
+import { Reise } from '../../entities/reise';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req:Request, res: Response) => {
     try {
         console.log("GET REISEZIEL");
         const reiseziel: Reiseziel[] = await ReisezielMethod.getAllReiseziel();
@@ -15,7 +17,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/:id', async (req, res) => {
+router.post('/:id(\\d+)', async (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     try {
         const reiseziel: Reiseziel|null = await ReisezielMethod.getReisezielById(parseInt(req.params.id));
@@ -30,5 +32,50 @@ router.post('/:id', async (req, res) => {
         res.status(500).json({ error: "Failed to fetch data" });
     }
 });
+
+/**
+ * POST request to add reiseziel
+ * @tested
+ */
+router.post('/add', async(req: Request, res: Response) => {
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        console.log("Route Add Reiseziel");
+        const { name, beschreibung, bild, startDate, endDate } = req.body;
+    // Validate input
+        if (!name || !beschreibung || !bild || !startDate || !endDate) {
+            return res.status(400).json({ error: "All fields are required." });
+        }
+        else {
+            const zeitraum = new Zeitraum(new Date(startDate), new Date(endDate));
+            const newReiseziel = new Reiseziel(name, beschreibung, bild, zeitraum);
+            await ReisezielMethod.createReiseziel(newReiseziel);
+            return res.status(201).json({status: "Successfully adding Reiseziel"});
+        }
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "Failed to add Reiseziel" });
+    }
+});
+
+/**
+ * POST request to delete reiseziel
+ * @tested
+ */
+router.post('/delete/:id(\\d+)', async (req: Request, res: Response) => {
+    try {
+        console.log("Route delete Reise by id");
+        await ReisezielMethod.deleteReisezielById(parseInt(req.params.id));
+        res.status(200).json({status: "Reise deleted successfully"});
+    }
+    catch {
+        console.error('Request Failed to delete Reiseziel');
+        res.status(500).json({ error: "Failed to delete Reiseziel" });
+    }
+
+});
+
+
 
 export default router;

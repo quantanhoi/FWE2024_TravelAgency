@@ -38,6 +38,8 @@ drop index if exists ZEITRAUM_PK;
 
 drop table if exists Zeitraum cascade;
 
+drop table if exists userData cascade;
+
 /*==============================================================*/
 /* Table: Reise                                                 */
 /*==============================================================*/

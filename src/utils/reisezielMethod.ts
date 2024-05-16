@@ -1,6 +1,7 @@
 import { LoadStrategy, MikroORM } from "@mikro-orm/postgresql";
 import defineConfig from '../mikro-orm.config'
 import { Reiseziel} from "../entities/reiseziel";
+import { Zeitraum } from "../entities/zeitraum";
 
 
 /**
@@ -46,3 +47,57 @@ export async function getReisezielById(rz_id: number): Promise<Reiseziel | null>
 }
 
 //TODO: add function to add extra reiseziel to database
+
+
+
+/**
+ * @param reiseziel reiseziel object to be added to the database
+ * 
+ */
+export async function createReiseziel(reiseziel: Reiseziel): Promise<void> {
+    const orm = await MikroORM.init(defineConfig);
+    try {
+        const em = orm.em.fork();
+        const zeitraum = reiseziel.zeitraum;
+        console.log('Zeitraum für Reiseziel creating........');
+        em.persist(zeitraum);
+        await em.flush();
+        console.log('Zeitraum für Reise created successfully');
+        em.persist(reiseziel);
+        await em.flush();
+        console.log('Reise created successfully');
+    }
+    catch (error) {
+        console.error('Failed to Push Reise');
+        throw error;
+    }
+    finally{
+        await orm.close();
+    }
+    
+}
+
+
+export async function deleteReisezielById(id: number): Promise<void> {
+    const orm = await MikroORM.init(defineConfig);
+    try {
+        const em = orm.em.fork();
+        const reise = await em.findOne(Reiseziel, { rz_id: id });
+        if(!reise){
+            console.error('Reiseziel not found');
+            throw new Error('Reiseziel not found');
+        }
+
+        em.remove(reise);
+        await em.flush();
+        console.log('Reiseziel deleted successfully');
+    }
+    catch (error) {
+        console.error('Failed to delete Reiseziel');
+        throw error;
+    }
+    finally{
+        await orm.close();
+    }
+    
+}

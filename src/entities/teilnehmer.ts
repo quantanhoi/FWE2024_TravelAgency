@@ -10,4 +10,9 @@ export class Teilnehmer {
 
     @ManyToMany(() => Reise, reise => reise.teilnehmers)
     reises = new Collection<Reise>(this);
+
+
+    constructor(name: string) {
+        this.t_Name = name;
+    }
 }

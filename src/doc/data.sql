@@ -1,9 +1,18 @@
--- Inserting data into Zeitraum
+
+
+-- Inserting data into Zeitraum for Reiseziel
 INSERT INTO Zeitraum (z_startDate, z_endDate) VALUES
 ('2024-06-01 00:00:00', '2024-06-10 00:00:00'),
 ('2024-06-15 00:00:00', '2024-06-25 00:00:00'),
 ('2024-07-01 00:00:00', '2024-07-10 00:00:00'),
-('2024-06-10 00:00:00', '2024-06-15 00:00:00');
+('2024-06-10 00:00:00', '2024-06-15 00:00:00'),
+--testing insert null timestamp for reise (this will be updated due to trigger)
+(null, null),
+(null, null),
+(null, null);
+
+
+--testing insert null timestamp for reise
 
 
 -- Inserting data into Teilnehmer
@@ -14,9 +23,9 @@ INSERT INTO Teilnehmer (t_Name) VALUES
 
 -- Inserting data into Reise
 INSERT INTO Reise (z_id, r_Name, r_Beschreibung, r_Bild) VALUES
-(1, 'Berlin Trip', 'Excursion to the capital city', 'berlin.jpg'),
-(2, 'Munich Oktoberfest', 'Visit the world-famous beer festival', 'oktoberfest.jpg'),
-(3, 'Black Forest Hike', 'Explore the scenic trails of the Black Forest', 'blackforest.jpg');
+(5, 'Berlin Trip', 'Excursion to the capital city', 'berlin.jpg'),
+(6, 'Munich Oktoberfest', 'Visit the world-famous beer festival', 'oktoberfest.jpg'),
+(7, 'Black Forest Hike', 'Explore the scenic trails of the Black Forest', 'blackforest.jpg');
 
 -- Inserting data into Reiseziel
 INSERT INTO Reiseziel (z_id, rz_Name, rz_Beschreibung, rz_Bild) VALUES

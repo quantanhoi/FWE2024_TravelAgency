@@ -1,6 +1,7 @@
 import { LoadStrategy, MikroORM } from "@mikro-orm/postgresql";
 import defineConfig from '../mikro-orm.config'
 import { Reise } from "../entities/reise";
+import { Reiseziel } from "../entities/reiseziel";
 
 
 
@@ -81,6 +82,58 @@ export async function createReise(reise: Reise): Promise<void> {
         await orm.close();
     }
     
+}
+
+
+export async function deleteReiseById(id: number): Promise<void> {
+    const orm = await MikroORM.init(defineConfig);
+    try {
+        const em = orm.em.fork();
+        const reise = await em.findOne(Reise, { r_id: id });
+        if(!reise){
+            console.error('Reise not found');
+            throw new Error('Reise not found');
+        }
+
+        em.remove(reise);
+        await em.flush();
+        console.log('Reise deleted successfully');
+    }
+    catch (error) {
+        console.error('Failed to delete Reise');
+        throw error;
+    }
+    finally{
+        await orm.close();
+    }
+    
+}
+
+export async function addReisezielToReise(reise_id: number, reiseziel_id: number): Promise<void> {
+    const orm = await MikroORM.init(defineConfig); // Make sure defineConfig is properly configured elsewhere
+    const em = orm.em.fork();
+
+    try {
+        // Fetch the Reise and Reiseziel entities using their IDs
+        const reise = await em.findOne(Reise, { r_id: reise_id });
+        const reiseziel = await em.findOne(Reiseziel, { rz_id: reiseziel_id });
+
+        if (!reise || !reiseziel) {
+            throw new Error('Reise or Reiseziel not found');
+        }
+
+        // Add Reiseziel to the Reise's collection of Reiseziels
+        reise.reiseziels.add(reiseziel);
+
+        // Persist changes to the database
+        await em.persistAndFlush(reise);
+        console.log('Reiseziel added successfully to Reise');
+    } catch (error) {
+        console.error('Failed to add Reiseziel to Reise:', error);
+        throw error;
+    } finally {
+        await orm.close();
+    }
 }
 
 //TODO: add function to create new reise in the database

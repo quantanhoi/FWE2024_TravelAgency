@@ -12,9 +12,16 @@ export class Reiseziel {
     @Property()
     rz_Bild!: string;
     @OneToOne(() => Zeitraum, { joinColumn: 'z_id'})
-    zeitraum?: Zeitraum;
+    zeitraum!: Zeitraum;
 
     @ManyToMany(() => Reise, reise => reise.reiseziels)
     reises = new Collection<Reise>(this);
 
+
+    constructor(name: string, beschreibung: string, bild: string, zeitraum: Zeitraum) {
+        this.rz_Name = name;
+        this.rz_Beschreibung = beschreibung;
+        this.rz_Bild = bild;
+        this.zeitraum = zeitraum;
+    }
 }
