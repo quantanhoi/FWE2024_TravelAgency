@@ -3,6 +3,7 @@ import { Response, Request } from 'express';
 import * as authMethod from '../../auth/auth.middleware'
 import * as userMethod from '../../utils/userMethod'
 const router = express.Router();
+router.use(authMethod.prepareAuthentication);
 
 router.post('/register', async (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
@@ -29,7 +30,7 @@ router.post('/register', async (req: Request, res: Response) => {
 });
 
 
-router.get('/:id(\\d+)', async (req: Request, res: Response) => {
+router.get('/:id(\\d+)', authMethod.verifyAccess, async (req: Request, res: Response) => {
     try {
         const userId = parseInt(req.params.id);
         const user = await userMethod.getUserDtoById(userId);

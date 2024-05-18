@@ -3,10 +3,12 @@ import * as ReisezielMethod from '../../utils/reisezielMethod';
 import { Reiseziel } from '../../entities/reiseziel';
 import { Zeitraum } from '../../entities/zeitraum';
 import { Reise } from '../../entities/reise';
+import { prepareAuthentication, verifyAccess } from '../../auth/auth.middleware';
 
 const router = express.Router();
+router.use(prepareAuthentication);
 
-router.get('/', async (req:Request, res: Response) => {
+router.get('/', verifyAccess, async (req:Request, res: Response) => {
     try {
         console.log("GET REISEZIEL");
         const reiseziel: Reiseziel[] = await ReisezielMethod.getAllReiseziel();
@@ -17,7 +19,7 @@ router.get('/', async (req:Request, res: Response) => {
     }
 });
 
-router.post('/:id(\\d+)', async (req: Request, res: Response) => {
+router.post('/:id(\\d+)', verifyAccess, async (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     try {
         const reiseziel: Reiseziel|null = await ReisezielMethod.getReisezielById(parseInt(req.params.id));
@@ -37,7 +39,7 @@ router.post('/:id(\\d+)', async (req: Request, res: Response) => {
  * POST request to add reiseziel
  * @tested
  */
-router.post('/add', async(req: Request, res: Response) => {
+router.post('/add', verifyAccess, async(req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     try {
         console.log("Route Add Reiseziel");
@@ -63,7 +65,7 @@ router.post('/add', async(req: Request, res: Response) => {
  * POST request to delete reiseziel
  * @tested
  */
-router.post('/delete/:id(\\d+)', async (req: Request, res: Response) => {
+router.post('/delete/:id(\\d+)', verifyAccess, async (req: Request, res: Response) => {
     try {
         console.log("Route delete Reise by id");
         await ReisezielMethod.deleteReisezielById(parseInt(req.params.id));

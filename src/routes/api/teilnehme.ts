@@ -1,11 +1,13 @@
 import express, {Response, Request} from 'express';
 import * as teilnehmeMethod from '../../utils/teilnehmerMethod'
 import { Teilnehmer } from '../../entities/teilnehmer';
+import { prepareAuthentication, verifyAccess } from '../../auth/auth.middleware';
 
 
 const router = express.Router();
+router.use(prepareAuthentication);
 
-router.get('/', async(req: Request, res:Response) => {
+router.get('/', verifyAccess, async(req: Request, res:Response) => {
     try{
         console.log("GET TEILNEHME");
         const teilnehmers: Teilnehmer[] = await teilnehmeMethod.getAllTeilnehmers();
@@ -17,7 +19,7 @@ router.get('/', async(req: Request, res:Response) => {
     }
 });
 
-router.post('/:id(\\d+)', async (req: Request, res: Response) => {
+router.post('/:id(\\d+)', verifyAccess, async (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     try {
         const teilnehmer: Teilnehmer|null = await teilnehmeMethod.getTeilnehmerById(parseInt(req.params.id));
@@ -41,7 +43,7 @@ router.post('/:id(\\d+)', async (req: Request, res: Response) => {
  * POST request to add teilnehmer
  * @tested
  */
-router.post('/add', async(req: Request, res: Response) => {
+router.post('/add', verifyAccess, async(req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     try {
         console.log("Route Add Teilnehmer");
@@ -66,7 +68,7 @@ router.post('/add', async(req: Request, res: Response) => {
  * POST request to delete teilnehmer
  * @tested
  */
-router.post('/delete/:id(\\d+)', async(req: Request, res: Response) => {
+router.post('/delete/:id(\\d+)', verifyAccess, async(req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     try {
         console.log("Route Delete Teilnehmer");
@@ -83,7 +85,7 @@ router.post('/delete/:id(\\d+)', async(req: Request, res: Response) => {
 /**
  * Add reise to a teilnehmer
  */
-router.post('/addReise/:t_id(\\d+)/:r_id(\\d+)', async(req: Request, res: Response) => {
+router.post('/addReise/:t_id(\\d+)/:r_id(\\d+)', verifyAccess, async(req: Request, res: Response) => {
     try {
         console.log("Route Add Reise to Teilnehmer");
         await teilnehmeMethod.addReiseToTeilnehmer(parseInt(req.params.t_id), parseInt(req.params.r_id));

@@ -4,6 +4,7 @@ import * as ReiseMethod from '../../utils/reiseMethod';
 import {Reise} from '../../entities/reise';
 import { Zeitraum } from '../../entities/zeitraum';
 import { prepareAuthentication, verifyAccess } from '../../auth/auth.middleware';
+import { verify } from 'jsonwebtoken';
 
 const router = express.Router();
 router.use(prepareAuthentication)
@@ -31,7 +32,7 @@ router.get('/', verifyAccess, async (req: Request, res: Response) => {
  * @returns specific reise object with id or null if not found
  * @tested
  */
-router.post('/:id(\\d+)', async (req: Request, res: Response) => {
+router.post('/:id(\\d+)', verifyAccess ,async (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
 
     try {
@@ -56,7 +57,7 @@ router.post('/:id(\\d+)', async (req: Request, res: Response) => {
  * @returns status of the request
  * @tested
  */
-router.post('/add', async(req:Request, res: Response) => {
+router.post('/add', verifyAccess ,async(req:Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     try {
         console.log("Route Add Reise");
@@ -87,7 +88,7 @@ router.post('/add', async(req:Request, res: Response) => {
     * @tested
     
  */
-router.post('/delete/:id(\\d+)', async (req: Request, res: Response) => {
+router.post('/delete/:id(\\d+)',  verifyAccess ,async (req: Request, res: Response) => {
     try {
         console.log("Route delete Reise by id");
         await ReiseMethod.deleteReiseById(parseInt(req.params.id));
@@ -104,7 +105,7 @@ router.post('/delete/:id(\\d+)', async (req: Request, res: Response) => {
  * POST request to to add reiseziel to reise by id of reiseziel and reise
  * @tested
  */
-router.post('/addReiseziel/:id(\\d+)/:idReiseziel(\\d+)', async (req: Request, res: Response) => {
+router.post('/addReiseziel/:id(\\d+)/:idReiseziel(\\d+)', verifyAccess,async (req: Request, res: Response) => {
     try {
         console.log("Route add Reiseziel to Reise");
         await ReiseMethod.addReisezielToReise(parseInt(req.params.id), parseInt(req.params.idReiseziel));
