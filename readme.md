@@ -57,6 +57,6 @@ Reponse example for registering user
 ```
 
 Authorization tested with JWT
-![Authorization](src/doc/authorization_tested.png)
+![Authorization](src/doc/authorized_tested.png)
 
 
