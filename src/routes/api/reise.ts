@@ -3,15 +3,16 @@ import express, {Request, Response} from 'express';
 import * as ReiseMethod from '../../utils/reiseMethod';
 import {Reise} from '../../entities/reise';
 import { Zeitraum } from '../../entities/zeitraum';
+import { prepareAuthentication, verifyAccess } from '../../auth/auth.middleware';
 
 const router = express.Router();
-
+router.use(prepareAuthentication)
 /**
  * GET request to fetch all reise
  * @returns all reise as json
  * @tested
  */
-router.get('/', async (req: Request, res: Response) => {
+router.get('/', verifyAccess, async (req: Request, res: Response) => {
     try{
         console.log("GET REISE");
         const reise: Reise[] = await ReiseMethod.getAllReise();

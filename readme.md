@@ -9,6 +9,7 @@ npm install @mikro-orm/core \
 npm i --save-dev @types/express
 npm install --save-dev @types/jsonwebtoken
 npm install --save-dev @types/bcryptjs
+npm install class-transformer
 
 ```
 Structure of the database (check out src/doc/ for SQL)
@@ -35,6 +36,23 @@ test data to add to Reise
     "bild": "Frankfurt.jpg",
     "startDate": "2024-06-15 12:00:00",
     "endDate": "2024-06-17 12:00:00"
+}
+```
+
+
+test data for user
+```
+{
+    "email": "edward6111999@gmail.com",
+    "name": "Trung Thieu",
+    "password" : "12345678"
+}
+```
+Reponse example for registering user
+```
+{
+    "status": "Success registering user",
+    "jwtToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVkd2FyZDYxMTE5OTlAZ21haWwuY29tIiwibmFtZSI6IlRydW5nIFRoaWV1IiwiaWF0IjoxNzE2MDMzMTQxLCJleHAiOjE3MTYwMzY3NDEsImlzcyI6Imh0dHA6Ly9md2UuYXV0aCJ9.FDoDGrFf0qq-je6PU3WTVMcL_HuxUjdfjHuqqEOLXQk"
 }
 ```
 

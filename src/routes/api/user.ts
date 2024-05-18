@@ -1,6 +1,7 @@
 import express from 'express';
 import { Response, Request } from 'express';
 import * as authMethod from '../../auth/auth.middleware'
+import * as userMethod from '../../utils/userMethod'
 const router = express.Router();
 
 router.post('/register', async (req: Request, res: Response) => {
@@ -12,8 +13,11 @@ router.post('/register', async (req: Request, res: Response) => {
             return res.status(400).json({ error: "All fields are required." });
         }
         else  {
-            await authMethod.registerUser(email, name, password)
-            return res.status(201).json({status: "Success registering user"});
+            const user = await authMethod.registerUser(email, name, password);
+            const jwtToken = authMethod.generateToken(user);
+            return res.status(201).json({status: "Success registering user", 
+                jwtToken: jwtToken
+            });
         }
     }
     catch (error) {
@@ -22,6 +26,49 @@ router.post('/register', async (req: Request, res: Response) => {
         
     }
     
+});
+
+
+router.get('/:id(\\d+)', async (req: Request, res: Response) => {
+    try {
+        const userId = parseInt(req.params.id);
+        const user = await userMethod.getUserDtoById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        else{
+            return res.status(200).json(user);
+        }
+        
+    } catch (err) {
+        console.error('Failed to fetch user:', err);
+        res.status(500).json({ error: "Failed to fetch user" });
+    }
+});
+
+router.post('/login', async(req: Request, res: Response) => {
+    try {
+        const {email, password} = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email and password are required." });
+        }
+        const user = await userMethod.getUserByEmail(email);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        // Check password
+        const passwordIsValid = await authMethod.comparePasswordWithHash(password, user.u_password);
+        if (!passwordIsValid) {
+            return res.status(401).json({ error: "Invalid password" });
+        }
+        // Generate and return JWT
+        const jwtToken = authMethod.generateToken(user);
+        return res.status(200).json({ jwtToken });
+    }
+    catch(err) {
+        console.error('Failed to log in:', err);
+        res.status(500).json({ error: "Failed to log in" });
+    }
 });
 
 export default router;
