@@ -7,7 +7,7 @@ import * as userMethod from '../utils/userMethod';
 
 const FWE_SECRET = 'SECRET_KEY';
 const FWE_OPTIONS: SignOptions = {
-    expiresIn: '1h',
+    expiresIn: '10h',
     algorithm: 'HS256',
     issuer: 'http://fwe.auth'
 }

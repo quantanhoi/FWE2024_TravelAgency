@@ -6,9 +6,11 @@ import reiseRoute from './routes/api/reise';
 import reisezielRoute from './routes/api/reiseziel';
 import userRoute from './routes/api/user'
 import teilnehmerRoute from './routes/api/teilnehme'
+import cors from 'cors';
 
 const app = express();
-const port = 3000;
+app.use(cors());
+const port = 3001;
 app.use(express.json());
 app.use('/api/reise', reiseRoute);
 app.use('/api/reiseziel', reisezielRoute);

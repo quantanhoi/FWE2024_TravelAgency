@@ -9,7 +9,7 @@ npm install @mikro-orm/core \
 npm i --save-dev @types/express
 npm install --save-dev @types/jsonwebtoken
 npm install --save-dev @types/bcryptjs
-npm install class-transformer
+npm i --save-dev @types/cors
 
 ```
 Structure of the database (check out src/doc/ for SQL)
