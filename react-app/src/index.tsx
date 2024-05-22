@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, createBrowserRouter, Navigate, Route, RouteProps, RouterProvider, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import LoginPage from './pages/auth/login';
 import { AuthProvider, useAuth } from './providers/authProvider'; 
 

@@ -6,6 +6,7 @@ import { useAuth } from '../../providers/authProvider';
 
 const LoginPage: React.FC = () => {
     console.log("LoginPage rendered");
+    //deconstruct onLogin from useAuth
     const { onLogin } = useAuth();
 
     const formik = useFormik({
