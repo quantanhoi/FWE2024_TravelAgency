@@ -1,8 +1,13 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useAuth } from '../../providers/authProvider';
+
 
 const LoginPage: React.FC = () => {
+    console.log("LoginPage rendered");
+    const { onLogin } = useAuth();
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -15,12 +20,14 @@ const LoginPage: React.FC = () => {
         onSubmit: (values) => {
             // Handle form submission
             console.log(values);
-            // Add your login logic here, e.g., call an API to authenticate the user
+            onLogin(values); // Call onLogin with form values
         },
     });
 
+    console.log("formik object", formik);
+
     return (
-        <div>
+        <div className='header'>
             <h1>Login</h1>
             <form onSubmit={formik.handleSubmit}>
                 <div>
@@ -52,5 +59,3 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
-
-
