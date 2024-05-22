@@ -22,3 +22,8 @@ code {
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+img {
+  height: 800px;
+  width: 1200px;
+}

@@ -2,6 +2,7 @@ import { Entity, PrimaryKey, Property, ManyToMany, Collection, OneToOne } from '
 import { Reiseziel } from './reiseziel';
 import { Teilnehmer } from './teilnehmer';
 import { Zeitraum } from './zeitraum';
+import { UserData } from './user';
 
 @Entity({tableName: 'reise'})
 export class Reise {
@@ -31,11 +32,12 @@ export class Reise {
 
 
     //reise is the owner of the relationship
-    @ManyToMany(() => Teilnehmer, teilnehmer => teilnehmer.reises, {
+    //change this to UserData for authentication function
+    @ManyToMany(() => UserData, user => user.reises, {
         owner: true,
         pivotTable: 'teilnehmer_reise',
         joinColumns: ['r_id'],
-        inverseJoinColumns: ['t_id']
+        inverseJoinColumns: ['u_id']
     })
     teilnehmers = new Collection<Teilnehmer>(this);
 

@@ -1,4 +1,5 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Collection, Entity, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import { Reise } from './reise';
 //by using class-transformer we don't need to create DTO?
 @Entity({tableName: 'userdata'})
 export class UserData {
@@ -14,6 +15,10 @@ export class UserData {
     @Property()
     u_password!: string;
 
+
+    @ManyToMany(() => Reise, reise => reise.teilnehmers)
+    reises = new Collection<Reise>(this);
+    
     constructor(email: string, name: string, password: string) {
         this.u_email = email;
         this.u_name = name;
