@@ -1,56 +1,59 @@
-import React from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { BaseLayout } from "../../layout/BaseLayout";
+import { AuthCard } from "./components/authCard";
+import { Box, Button, Heading, Link, VStack } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
+import { Form, Formik } from "formik";
+import { InputControl } from "formik-chakra-ui";
+import { object, string } from "yup";
+import { LoginUserData, useAuth } from "../../providers/authProvider";
 
-const LoginPage: React.FC = () => {
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: '',
-        },
-        validationSchema: Yup.object({
-            email: Yup.string().email('Invalid email address').required('Required'),
-            password: Yup.string().required('Required'),
-        }),
-        onSubmit: (values) => {
-            // Handle form submission
-            console.log(values);
-            // Add your login logic here, e.g., call an API to authenticate the user
-        },
-    });
+export const LoginUserSchema = object({
+    email: string().required(),
+    password: string().required(),
+});
 
-    return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={formik.handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email Address</label>
-                    <input
-                        id="email"
-                        type="email"
-                        {...formik.getFieldProps('email')}
-                    />
-                    {formik.touched.email && formik.errors.email ? (
-                        <div>{formik.errors.email}</div>
-                    ) : null}
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        {...formik.getFieldProps('password')}
-                    />
-                    {formik.touched.password && formik.errors.password ? (
-                        <div>{formik.errors.password}</div>
-                    ) : null}
-                </div>
-                <button type="submit">Login</button>
-            </form>
-        </div>
-    );
+const initialFormValues: LoginUserData = {
+    email: "",
+    password: "",
 };
 
-export default LoginPage;
+export const LoginPage = () => {
+    const { onLogin } = useAuth();
+    return (
+        <BaseLayout>
+            <AuthCard>
+                <Heading>Login</Heading>
 
-
+                <Formik<LoginUserData>
+                    initialValues={initialFormValues}
+                    onSubmit={onLogin}
+                    validationSchema={LoginUserSchema}
+                >
+                    {(formik) => (
+                        <Form onSubmit={formik.handleSubmit}>
+                            <VStack alignItems={"flex-start"}>
+                                <InputControl
+                                    label="E-mail"
+                                    inputProps={{ placeholder: "Email" }}
+                                    name="email"
+                                />
+                                <InputControl
+                                    label="Password"
+                                    inputProps={{ type: "password", placeholder: "Password" }}
+                                    name="password"
+                                />
+                                <Button type="submit">Login</Button>
+                                <Box>
+                                    Keinen Account?{" "}
+                                    <Link as={RouterLink} to="/auth/register">
+                                        Register
+                                    </Link>
+                                </Box>
+                            </VStack>
+                        </Form>
+                    )}
+                </Formik>
+            </AuthCard>
+        </BaseLayout>
+    );
+};

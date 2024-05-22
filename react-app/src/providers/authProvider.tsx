@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             email: loginData.email,
             password: loginData.password,
         };
-        const res = await fetch("/api/auth/login", {
+        const res = await fetch("http://localhost:3001/api/user/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
