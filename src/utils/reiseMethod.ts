@@ -10,7 +10,7 @@ export async function getAllReise(): Promise<Reise[]> {
     try{
         const em = orm.em.fork();
         const reise = await em.find(Reise, {}, {
-            populate: ['reiseziels', 'teilnehmers'],  // Explicitly populate reiseziels
+            populate: ['reiseziels'],  // Explicitly populate reiseziels
             //IF NOT POPULATED, IT WILL NOT BE FETCHED
             strategy: LoadStrategy.JOINED  // Using JOIN strategy to fetch related entities
         });
@@ -33,8 +33,8 @@ export async function printAllReise(reise: Reise[]): Promise<void> {
         r.reiseziels.getItems().forEach(rz => {
             console.log(`Reiseziel ID: ${rz.rz_id}, Name: ${rz.rz_Name}`);
         });
-        r.teilnehmers.getItems().forEach(t => {
-            console.log(`Teilnehmer ID: ${t.t_id}, Name: ${t.t_Name}`);
+        r.teilnehmers.getItems().forEach(u => {
+            console.log(`Teilnehmer ID: ${u.u_id}, Name: ${u.u_name}`);
         });
     });
 }
@@ -45,7 +45,7 @@ export async function getReiseById(id: number): Promise<Reise|null> {
     try{
         const em = orm.em.fork();
         const reise: Reise|null = await em.findOne(Reise, { r_id: id }, {
-            populate: ['reiseziels', 'teilnehmers'],  // Explicitly populate reiseziels
+            populate: ['reiseziels'],  // Explicitly populate reiseziels
             strategy: LoadStrategy.JOINED  // Using JOIN strategy to fetch related entities
         });
         // console.log(`Reise ID: ${reise?.r_id}, Name: ${reise?.r_Name}`);
@@ -110,7 +110,7 @@ export async function deleteReiseById(id: number): Promise<void> {
 }
 
 export async function addReisezielToReise(reise_id: number, reiseziel_id: number): Promise<void> {
-    const orm = await MikroORM.init(defineConfig); // Make sure defineConfig is properly configured elsewhere
+    const orm = await MikroORM.init(defineConfig); 
     const em = orm.em.fork();
 
     try {
@@ -136,4 +136,55 @@ export async function addReisezielToReise(reise_id: number, reiseziel_id: number
     }
 }
 
-//TODO: add function to create new reise in the database
+
+
+/**
+ * search function that use native query
+ * Example for native query: 
+        select r.*, z.z_startDate, z.z_endDate from reise r join zeitraum z
+        on r.z_id = z.z_id 
+        where r.r_name ILIKE '%berlin%' 
+        and z.z_startDate <= '2024-06-3 00:00:00'
+        and z.z_endDate >= '2024-06-14 00:00:00';
+ * @param name the string the reise name should contain
+ * @param startDate 
+ * @param endDate 
+ * @returns 
+ */
+
+        
+export async function searchReiseByNameAndZeitraum(
+    name?: string,
+    startDate?: Date,
+    endDate?: Date
+): Promise<Reise[]> {
+    const orm = await MikroORM.init(defineConfig);
+    const em = orm.em.fork();
+    try {
+        const qb = em.createQueryBuilder(Reise, 'r')
+            .select(['r.*', 'z.z_startDate', 'z.z_endDate', 'rz.rz_name', 'rz.rz_beschreibung'])
+            .leftJoinAndSelect('r.zeitraum', 'z')
+            .leftJoin('r.reiseziels', 'rz')
+
+        if (name) {
+            qb.andWhere(
+                '(r.r_name ILIKE ? OR rz.rz_name ILIKE ?)', 
+                [`%${name}%`, `%${name}%`]
+            );
+        }
+        if (startDate && !isNaN(startDate.getTime())) {
+            qb.andWhere('z.z_startDate >= ?', [startDate]);
+        }
+        if (endDate && !isNaN(endDate.getTime())) {
+            qb.andWhere('z.z_endDate <= ?', [endDate]);
+        }
+
+        const results = await qb.getResultList();
+        return results;
+    } catch (err) {
+        console.error('Failed to search Reise by name and Zeitraum:', err);
+        throw err;
+    } finally {
+        await orm.close();
+    }
+}

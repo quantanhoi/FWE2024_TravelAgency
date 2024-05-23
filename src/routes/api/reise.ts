@@ -29,10 +29,11 @@ router.get('/', verifyAccess, async (req: Request, res: Response) => {
 
 /**
  * POST request to fetch reise by id
+ * TODO: change this to get?
  * @returns specific reise object with id or null if not found
  * @tested
  */
-router.post('/:id(\\d+)', verifyAccess ,async (req: Request, res: Response) => {
+router.get('/:id(\\d+)', verifyAccess ,async (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
 
     try {
@@ -88,7 +89,7 @@ router.post('/add', verifyAccess ,async(req:Request, res: Response) => {
     * @tested
     
  */
-router.post('/delete/:id(\\d+)',  verifyAccess ,async (req: Request, res: Response) => {
+router.delete('/delete/:id(\\d+)',  verifyAccess ,async (req: Request, res: Response) => {
     try {
         console.log("Route delete Reise by id");
         await ReiseMethod.deleteReiseById(parseInt(req.params.id));
@@ -114,6 +115,22 @@ router.post('/addReiseziel/:id(\\d+)/:idReiseziel(\\d+)', verifyAccess,async (re
     catch {
         console.error('Request Failed to add Reiseziel to Reise');
         res.status(500).json({ error: "Failed to add Reiseziel to Reise" });
+    }
+});
+
+/**
+ * GET request to search for reise by name and zeitraum
+ * @returns matching reise objects as json
+ */
+router.get('/search', verifyAccess, async (req: Request, res: Response) => {
+    try {
+        console.log("Route search Reise by name and zeitraum");
+        const { name, startDate, endDate } = req.body;
+        const reise: Reise[] = await ReiseMethod.searchReiseByNameAndZeitraum(name as string, new Date(startDate as string), new Date(endDate as string));
+        res.json(reise);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "Failed to search reise" });
     }
 });
 

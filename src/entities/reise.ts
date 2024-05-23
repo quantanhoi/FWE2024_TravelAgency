@@ -1,6 +1,5 @@
 import { Entity, PrimaryKey, Property, ManyToMany, Collection, OneToOne } from '@mikro-orm/core';
 import { Reiseziel } from './reiseziel';
-import { Teilnehmer } from './teilnehmer';
 import { Zeitraum } from './zeitraum';
 import { UserData } from './user';
 
@@ -35,11 +34,11 @@ export class Reise {
     //change this to UserData for authentication function
     @ManyToMany(() => UserData, user => user.reises, {
         owner: true,
-        pivotTable: 'teilnehmer_reise',
+        pivotTable: 'user_reise',
         joinColumns: ['r_id'],
         inverseJoinColumns: ['u_id']
     })
-    teilnehmers = new Collection<Teilnehmer>(this);
+    teilnehmers = new Collection<UserData>(this);
 
 
     constructor(r_name: string, r_beschreibung: string, r_bild: string, zeitraum: Zeitraum) {

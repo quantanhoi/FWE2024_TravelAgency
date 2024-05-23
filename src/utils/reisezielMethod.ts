@@ -1,7 +1,6 @@
 import { LoadStrategy, MikroORM } from "@mikro-orm/postgresql";
 import defineConfig from '../mikro-orm.config'
 import { Reiseziel} from "../entities/reiseziel";
-import { Zeitraum } from "../entities/zeitraum";
 
 
 /**

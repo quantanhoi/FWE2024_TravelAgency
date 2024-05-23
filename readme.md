@@ -28,6 +28,7 @@ Test data to add to Reiseziel
 ```
 
 
+
 test data to add to Reise
 ```
 {
@@ -55,6 +56,27 @@ Reponse example for registering user
     "jwtToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVkd2FyZDYxMTE5OTlAZ21haWwuY29tIiwibmFtZSI6IlRydW5nIFRoaWV1IiwiaWF0IjoxNzE2MDMzMTQxLCJleHAiOjE3MTYwMzY3NDEsImlzcyI6Imh0dHA6Ly9md2UuYXV0aCJ9.FDoDGrFf0qq-je6PU3WTVMcL_HuxUjdfjHuqqEOLXQk"
 }
 ```
+
+test search Reise with Reise name or Reiseziel name and startDate, endDate at http://localhost:3001/api/reise/search
+```
+{
+    "name": "Berlin Trip",
+    "startDate": "2024-05-01 00:00:00",
+    "endDate": "2024-06-31 00:00:00"
+}
+```
+Test using Reiseziel string
+```
+{
+    "name": "neu",
+    "startDate": "2024-05-01 00:00:00",
+    "endDate": "2024-06-31 00:00:00"
+}
+```
+
+Procedure: test by example data, then remove/edit data startDate, endDate, name one by one then check the result
+
+
 
 Authorization tested with JWT
 ![Authorization](src/doc/authorized_tested.png)

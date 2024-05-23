@@ -19,7 +19,7 @@ router.get('/', verifyAccess, async (req:Request, res: Response) => {
     }
 });
 
-router.post('/:id(\\d+)', verifyAccess, async (req: Request, res: Response) => {
+router.get('/:id(\\d+)', verifyAccess, async (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
     try {
         const reiseziel: Reiseziel|null = await ReisezielMethod.getReisezielById(parseInt(req.params.id));
@@ -65,7 +65,7 @@ router.post('/add', verifyAccess, async(req: Request, res: Response) => {
  * POST request to delete reiseziel
  * @tested
  */
-router.post('/delete/:id(\\d+)', verifyAccess, async (req: Request, res: Response) => {
+router.delete('/delete/:id(\\d+)', verifyAccess, async (req: Request, res: Response) => {
     try {
         console.log("Route delete Reise by id");
         await ReisezielMethod.deleteReisezielById(parseInt(req.params.id));

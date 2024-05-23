@@ -14,6 +14,7 @@ export class UserData {
 
     @Property()
     u_password!: string;
+    
 
 
     @ManyToMany(() => Reise, reise => reise.teilnehmers)

@@ -15,12 +15,6 @@ INSERT INTO Zeitraum (z_startDate, z_endDate) VALUES
 --testing insert null timestamp for reise
 
 
--- Inserting data into Teilnehmer
-INSERT INTO Teilnehmer (t_Name) VALUES
-('John Doe'),
-('Jane Smith'),
-('Alice Johnson');
-
 -- Inserting data into Reise
 INSERT INTO Reise (z_id, r_Name, r_Beschreibung, r_Bild) VALUES
 (5, 'Berlin Trip', 'Excursion to the capital city', 'berlin.jpg'),
@@ -42,11 +36,7 @@ INSERT INTO Reise_Reiseziel (r_id, rz_id) VALUES
 (3, 3),
 (1, 4);
 
--- Inserting data into Teilnehmer_Reise (Linking participants with trips)
-INSERT INTO Teilnehmer_Reise (r_id, t_id) VALUES
-(1, 1),
-(2, 2),
-(3, 3);
+
 
 
 

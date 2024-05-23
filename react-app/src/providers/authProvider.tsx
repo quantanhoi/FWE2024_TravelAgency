@@ -27,6 +27,18 @@ type AuthContextType = {
 // Create context
 const AuthContext = createContext<AuthContextType | null>(null);
 
+/**
+ * check if current jwt token is expired
+ * @param token current token saved in local storage
+ * @returns true or false if token is expired
+ */
+const isTokenExpired = (token: string) => {
+    const decoded = JSON.parse(atob(token.split('.')[1])) as User;
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decoded.exp < currentTime;
+};
+
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [accessToken, setAccessToken] = useLocalStorage<string | null>('accessToken', null);
     const navigate = useNavigate();
@@ -62,8 +74,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
     const auth = React.useContext(AuthContext);
+    const navigate = useNavigate();
     if (!auth) {
         throw new Error('useAuth must be used within an AuthProvider');
+    }
+    if (auth.accessToken && isTokenExpired(auth.accessToken)) {
+        auth.onLogout();
+        navigate('/login');
     }
     return auth;
 };

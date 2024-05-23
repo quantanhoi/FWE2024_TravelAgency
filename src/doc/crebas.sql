@@ -22,17 +22,7 @@ drop index if exists REISEZIEL_PK;
 
 drop table if exists Reiseziel cascade;
 
-drop index if exists TEILNEHMER_PK;
-
-drop table if exists Teilnehmer cascade;
-
-drop index if exists ASSOCIATION_2_FK2;
-
-drop index if exists ASSOCIATION_2_FK;
-
-drop index if exists ASSOCIATION_2_PK;
-
-drop table if exists Teilnehmer_Reise cascade;
+drop table if exists User_Reise cascade;
 
 drop index if exists ZEITRAUM_PK;
 
@@ -109,42 +99,40 @@ create unique index REISEZIEL_PK on Reiseziel (rz_id);
 create index ASSOCIATION_5_FK on Reiseziel (z_id);
 
 /*==============================================================*/
-/* Table: Teilnehmer                                            */
+/* Table: userData                                              */
 /*==============================================================*/
-create table Teilnehmer (
-   t_id serial not null,
-   t_Name varchar(254),
-   constraint PK_TEILNEHMER primary key (t_id)
+CREATE TABLE userData(
+	u_id serial not null,
+	u_email varchar(254) not null,
+	u_name varchar(254) not null,
+	u_password varchar(512) not null,
+   UNIQUE(u_email),
+   constraint PK_USERDATA primary key (u_id)
 );
 
 /*==============================================================*/
-/* Index: TEILNEHMER_PK                                         */
+/* Table: User_Reise                                            */
 /*==============================================================*/
-create unique index TEILNEHMER_PK on Teilnehmer (t_id);
-
-/*==============================================================*/
-/* Table: Teilnehmer_Reise                                      */
-/*==============================================================*/
-create table Teilnehmer_Reise (
+create table User_Reise (
    r_id integer not null,
-   t_id integer not null,
-   constraint PK_TEILNEHMER_REISE primary key (r_id, t_id)
+   u_id integer not null,
+   constraint PK_USER_REISE primary key (r_id, u_id)
 );
 
 /*==============================================================*/
 /* Index: ASSOCIATION_2_PK                                      */
 /*==============================================================*/
-create unique index ASSOCIATION_2_PK on Teilnehmer_Reise (r_id, t_id);
+create unique index ASSOCIATION_2_PK on User_Reise (r_id, u_id);
 
 /*==============================================================*/
 /* Index: ASSOCIATION_2_FK                                      */
 /*==============================================================*/
-create index ASSOCIATION_2_FK on Teilnehmer_Reise (r_id);
+create index ASSOCIATION_2_FK on User_Reise (r_id);
 
 /*==============================================================*/
 /* Index: ASSOCIATION_2_FK2                                     */
 /*==============================================================*/
-create index ASSOCIATION_2_FK2 on Teilnehmer_Reise (t_id);
+create index ASSOCIATION_2_FK2 on User_Reise (u_id);
 
 /*==============================================================*/
 /* Table: Zeitraum                                              */
@@ -182,19 +170,14 @@ add
    constraint FK_REISEZIE_ASSOCIATI_ZEITRAUM foreign key (z_id) references Zeitraum (z_id) on delete restrict on update restrict;
 
 alter table
-   Teilnehmer_Reise
+   User_Reise
 add
-   constraint FK_TEILNEHM_ASSOCIATI_REISE foreign key (r_id) references Reise (r_id) on delete restrict on update restrict;
+   constraint FK_USER_REISE_ASSOCIATI_REISE foreign key (r_id) references Reise (r_id) on delete restrict on update restrict;
 
 alter table
-   Teilnehmer_Reise
+   User_Reise
 add
-   constraint FK_TEILNEHM_ASSOCIATI_TEILNEHM foreign key (t_id) references Teilnehmer (t_id) on delete restrict on update restrict;
-
-
-
-
-
+   constraint FK_USER_REISE_ASSOCIATI_USERDATA foreign key (u_id) references userData (u_id) on delete restrict on update restrict;
 
 CREATE OR REPLACE FUNCTION update_zeitraum()
 RETURNS TRIGGER AS $$
@@ -225,21 +208,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
 -- Trigger for updates on the linking table if entries are added or removed
 CREATE TRIGGER trg_update_zeitraum_after_link_update
 AFTER INSERT OR UPDATE OR DELETE ON Reise_Reiseziel
 FOR EACH ROW
 EXECUTE FUNCTION update_zeitraum();
-
-
---user for JWT test
-CREATE TABLE userData(
-	u_id serial not null,
-	u_email varchar(254) not null,
-	u_name varchar(254) not null,
-	u_password varchar(512) not null,
-   UNIQUE(u_email)
-);

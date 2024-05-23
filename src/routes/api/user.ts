@@ -29,7 +29,7 @@ router.post('/register', async (req: Request, res: Response) => {
     
 });
 
-
+//TODO: instead of searching user by id, search user by email which is included in the token
 router.get('/:id(\\d+)', authMethod.verifyAccess, async (req: Request, res: Response) => {
     try {
         const userId = parseInt(req.params.id);
@@ -47,7 +47,7 @@ router.get('/:id(\\d+)', authMethod.verifyAccess, async (req: Request, res: Resp
     }
 });
 
-router.post('/login', async(req: Request, res: Response) => {
+router.get('/login', async(req: Request, res: Response) => {
     try {
         const {email, password} = req.body;
         if (!email || !password) {
