@@ -47,7 +47,25 @@ router.get('/:id(\\d+)', authMethod.verifyAccess, async (req: Request, res: Resp
     }
 });
 
-router.get('/login', async(req: Request, res: Response) => {
+router.post('/', authMethod.verifyAccess, async (req: Request, res: Response) => {
+    try{
+        if(!req.user) {
+            return res.status(401).json({ error: "Error user not found" });
+        }
+        const userDTO = userMethod.toUserDTO(req.user);
+        return res.status(200).json(userDTO);
+
+    }
+    catch(err) {
+        console.error('Failed to fetch user:', err);
+        res.status(500).json({ error: "Failed to fetch user" });
+    }
+});
+
+
+
+
+router.post('/login', async(req: Request, res: Response) => {
     try {
         const {email, password} = req.body;
         if (!email || !password) {
@@ -72,4 +90,22 @@ router.get('/login', async(req: Request, res: Response) => {
     }
 });
 
+
+router.post('/reises', async (req: Request, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const email = req.user.u_email;
+        const user = await userMethod.getUserWithReises(email);
+        if (user) {
+            res.json(user.reises);
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching user reises:', error);
+        res.status(500).json({ error: 'Failed to fetch user reises' });
+    }
+});
 export default router;

@@ -63,4 +63,25 @@ export async function getUserByEmail(email: string): Promise<UserData | null> {
         await orm.close(); // Ensure the ORM is closed after the operation
     }
 }
+
+export async function getUserDtoByEmail(email: string): Promise<UserDTO|null> {
+    return toUserDTO(await getUserByEmail(email));
+}
+
+export async function getUserWithReises(email: string): Promise<UserData | null> {
+    const orm = await MikroORM.init(defineConfig);
+    const em = orm.em.fork();
+    try {
+        // Fetch the user and populate the reises collection
+        //by using populate reises.zeitraum, we can get the zeitraum of reises
+        //if it's only "reises", we can only get the reises without zeitraum
+        const user = await em.findOne(UserData, { u_email: email }, { populate: ['reises.zeitraum'] });
+        return user;
+    } catch (error) {
+        console.error('Failed to fetch user with reises:', error);
+        throw error;
+    } finally {
+        await orm.close();
+    }
+}
 //to get userDTOById, it should be userMethod.toUserDTO(await userMethod.getUserById(id));

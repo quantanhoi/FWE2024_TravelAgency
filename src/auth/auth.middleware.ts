@@ -126,12 +126,12 @@ export async function prepareAuthentication(req:  Request, _res: Response, next:
             const token = verifyToken(authHeader);
             //instead of searching user by id, search user by email
             req.user = await userMethod.getUserByEmail(token.email);
+            req.token = token;
             if(!req.user) {
                 console.log("email: " + token.email);
-                console.log("User is not found through id");
+                console.log("User is not found through email");
             }
-
-            req.token = token;
+            
         }
         catch (err) 
         {

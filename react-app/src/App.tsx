@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { useAuth } from './providers/authProvider';
+import Navigator from './components/navbar';
 type TestButtonProps = {
   onClick: () => void;  // Define onClick prop
 };
@@ -64,6 +65,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <Navigator />
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.

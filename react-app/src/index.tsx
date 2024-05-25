@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Navigate, Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import LoginPage from './pages/auth/login';
 import { AuthProvider, useAuth } from './providers/authProvider'; 
+import UserProfilePage from './pages/userProfile/userProfile';
 
 // Create router to route pages
 // const router = createBrowserRouter([
@@ -36,6 +37,10 @@ export const router: RouteConfig[] = [
     isPrivate: true,
     errorElement: <div>404 Not Found</div>,
   },
+  {
+    path: '/user',
+    element: <UserProfilePage />,
+  }
 ];
 export interface AuthRequiredProps {
   to?: string;

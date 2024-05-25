@@ -1,0 +1,35 @@
+/* UserProfilePage.css */
+
+
+.profile-nav {
+    width: 20%;
+    padding: 1vh;
+    margin: 1vh;
+}
+
+.profile-nav button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    background-color: transparent;
+    border: 1px solid white;
+    font-weight: 3500;
+    font-size: 50%;
+}
+
+.profile-nav button:hover {
+    background: #0056b3;
+    border: 3px solid white;
+}
+
+.profile-content {
+    flex: 1;
+    padding: 2vh;
+    margin: 2vh;
+}
+
+
