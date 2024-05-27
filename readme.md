@@ -81,6 +81,6 @@ Procedure: test by example data, then remove/edit data startDate, endDate, name 
 Authorization tested with JWT
 ![Authorization](src/doc/authorized_tested.png)
 
-[![Frontend Demo]](https://www.youtube.com/watch?v=pfWu9BR8E4s/0.jpg)](https://www.youtube.com/watch?v=pfWu9BR8E4s)
+[![Frontend Demo](https://www.youtube.com/watch?v=pfWu9BR8E4s/0.jpg)](https://www.youtube.com/watch?v=pfWu9BR8E4s)
 
 
