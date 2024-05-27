@@ -122,7 +122,7 @@ router.post('/addReiseziel/:id(\\d+)/:idReiseziel(\\d+)', verifyAccess,async (re
  * GET request to search for reise by name and zeitraum
  * @returns matching reise objects as json
  */
-router.get('/search', verifyAccess, async (req: Request, res: Response) => {
+router.post('/search', verifyAccess, async (req: Request, res: Response) => {
     try {
         console.log("Route search Reise by name and zeitraum");
         const { name, startDate, endDate } = req.body;

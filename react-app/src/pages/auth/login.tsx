@@ -3,10 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from '../../providers/authProvider';
 
-
 const LoginPage: React.FC = () => {
-    console.log("LoginPage rendered");
-    //deconstruct onLogin from useAuth
     const { onLogin } = useAuth();
 
     const formik = useFormik({
@@ -19,42 +16,46 @@ const LoginPage: React.FC = () => {
             password: Yup.string().required('Required'),
         }),
         onSubmit: (values) => {
-            // Handle form submission
-            console.log(values);
             onLogin(values); // Call onLogin with form values
         },
     });
 
-    console.log("formik object", formik);
-
     return (
-        <div className='header'>
+        <div className='header flex-column'>
             <h1>Login</h1>
-            <form onSubmit={formik.handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email Address</label>
+            <form onSubmit={formik.handleSubmit} className="form-grid">
+                <div className="form-group">
+                    <label htmlFor="email" className="form-label">Email Address</label>
                     <input
                         id="email"
                         type="email"
                         {...formik.getFieldProps('email')}
+                        className="font-size-3vh transparent-background white-text white-border margin10 form-input"
                     />
                     {formik.touched.email && formik.errors.email ? (
-                        <div>{formik.errors.email}</div>
+                        <div className="form-error">{formik.errors.email}</div>
                     ) : null}
                 </div>
-                <div>
-                    <label htmlFor="password">Password</label>
+                <div className="form-group">
+                    <label htmlFor="password" className="form-label">Password</label>
                     <input
                         id="password"
                         type="password"
                         {...formik.getFieldProps('password')}
+                        className="font-size-3vh transparent-background white-text white-border margin10 form-input"
                     />
                     {formik.touched.password && formik.errors.password ? (
-                        <div>{formik.errors.password}</div>
+                        <div className="form-error">{formik.errors.password}</div>
                     ) : null}
                 </div>
-                <button type="submit">Login</button>
+                <button 
+                    type="submit"
+                    className="font-size-3vh transparent-background white-text white-border margin10 form-button"
+                >
+                    Login
+                </button>
             </form>
+            <a href="/register" className='white-text margin10'>Not an user? Register here!</a>
         </div>
     );
 };

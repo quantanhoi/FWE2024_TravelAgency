@@ -2,6 +2,7 @@ import { LoadStrategy, MikroORM } from "@mikro-orm/postgresql";
 import defineConfig from '../mikro-orm.config'
 import { Reise } from "../entities/reise";
 import { Reiseziel } from "../entities/reiseziel";
+import { Zeitraum } from "../entities/zeitraum";
 
 
 
@@ -45,7 +46,7 @@ export async function getReiseById(id: number): Promise<Reise|null> {
     try{
         const em = orm.em.fork();
         const reise: Reise|null = await em.findOne(Reise, { r_id: id }, {
-            populate: ['reiseziels'],  // Explicitly populate reiseziels
+            populate: ['reiseziels', 'zeitraum', 'teilnehmers'],  // Explicitly populate reiseziels
             strategy: LoadStrategy.JOINED  // Using JOIN strategy to fetch related entities
         });
         // console.log(`Reise ID: ${reise?.r_id}, Name: ${reise?.r_Name}`);

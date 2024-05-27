@@ -108,4 +108,44 @@ router.post('/reises', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to fetch user reises' });
     }
 });
+
+
+/**
+ * Post request to add new reise to user
+ */
+router.post('/reises/add/:id(\\d+)', authMethod.verifyAccess, async (req: Request, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const email = req.user.u_email;
+        const r_id = parseInt(req.params.id);
+        const user = await userMethod.getUserWithReises(email);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        await userMethod.addReise(user, r_id);
+        res.status(201).json({ status: 'Reise added to user'});
+    } catch (error) {
+        console.error('Error adding reise:', error);
+        res.status(500).json({ error: 'Failed to add reise' });
+    }
+});
+
+router.delete('/reises/remove/:id(\\d+)', authMethod.verifyAccess, async (req: Request, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const email = req.user.u_email;
+        const r_id = parseInt(req.params.id);
+
+        await userMethod.removeReise(email, r_id);
+        res.status(200).json({ status: 'Reise removed from user'});
+    } catch (error) {
+        console.error('Error removing reise:', error);
+        res.status(500).json({ error: 'Failed to remove reise' });
+    }
+});
 export default router;

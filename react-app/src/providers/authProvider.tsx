@@ -8,6 +8,8 @@ export type LoginUserData = {
     password: string;
 };
 
+
+
 export type User = {
     email: string;
     name: string;
@@ -60,13 +62,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         navigate('/');
     };
 
+
     const onLogout = () => {
         setAccessToken(null);
         navigate('/login');
     };
 
     return (
-        <AuthContext.Provider value={{ user, accessToken, isAuthenticated: !!user, onLogin, onLogout }}>
+        <AuthContext.Provider value={{ user, accessToken, isAuthenticated: !!user, onLogin, onLogout}}>
             {children}
         </AuthContext.Provider>
     );

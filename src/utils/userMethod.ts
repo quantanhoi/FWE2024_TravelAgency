@@ -2,6 +2,8 @@ import { MikroORM } from "@mikro-orm/postgresql";
 import defineConfig from '../mikro-orm.config'
 import { UserData } from "../entities/user";
 import { UserDTO } from "../dto/userDTO";
+import { Reise } from "../entities/reise";
+import * as reiseMethod from './reiseMethod';
 
 export async function getUserById(u_id: number): Promise<UserData | null> {
     const orm = await MikroORM.init(defineConfig); // Ensure MikroORM is initialized with the right config
@@ -84,4 +86,86 @@ export async function getUserWithReises(email: string): Promise<UserData | null>
         await orm.close();
     }
 }
+
+export async function addReise(user: UserData, reise_id: number): Promise<void>{
+    const orm = await MikroORM.init(defineConfig);
+    try {
+        const em = orm.em.fork();
+        const reise = await reiseMethod.getReiseById(reise_id);
+        if(!user || !reise) {
+            throw new Error('User or Reise not found');
+        }
+        // Check if the Reise already exists in the user's list
+        const userHasReise = user.reises.getItems().some(r => r.r_id === reise_id);
+        if (userHasReise) {
+            throw new Error('Reise already exists in user list');
+        }
+        reise.teilnehmers.add(user);
+        await em.persistAndFlush(reise);
+    }
+    catch (error) {
+        console.error('Failed to add reise: ', error);
+        throw error;
+    }
+    finally {
+        await orm.close();
+    }
+}
+// export async function removeReise(userData: UserData, reise_id: number): Promise<void> {
+//     const orm = await MikroORM.init(defineConfig);
+//     try {
+//         const em = orm.em.fork();
+//         const reise = await reiseMethod.getReiseById(reise_id);
+//         console.log(reise);
+//         if (!userData || !reise) {
+//             throw new Error('User or Reise not found');
+//         }
+//         // Check if the Reise exists in the user's list
+//         const userHasReise = userData.reises.getItems().some(r => r.r_id === reise_id);
+//         if (!userHasReise) {
+//             throw new Error('Reise does not exist in user list');
+//         }
+//         reise.teilnehmers.remove(userData).where({u_email: userData.u_email});
+//         await em.persistAndFlush(reise);
+//     } catch (error) {
+//         console.error('Failed to remove reise:', error);
+//         throw error;
+//     } finally {
+//         await orm.close();
+//     }
+// }
+
+export async function removeReise(email: string, reise_id: number): Promise<void> {
+    const orm = await MikroORM.init(defineConfig);
+    try {
+        const em = orm.em.fork();
+
+        // Refetch the user entity to ensure it's managed by the current entity manager
+        const user = await em.findOneOrFail(UserData, {u_email: email},  { populate: ['reises'] });
+
+        const reise = await em.findOneOrFail(Reise, {r_id: reise_id}, { populate: ['teilnehmers'] });
+
+        if (!user || !reise) {
+            throw new Error('User or Reise not found');
+        }
+
+        // Check if the Reise exists in the user's list
+        const userHasReise = user.reises.getItems().some(r => r.r_id === reise_id);
+        if (!userHasReise) {
+            throw new Error('Reise does not exist in user list');
+        }
+
+        // Remove the user from the trip's participants
+        reise.teilnehmers.remove(user);
+        
+        // Persist the changes
+        await em.flush();
+    } catch (error) {
+        console.error('Failed to remove reise:', error);
+        throw error;
+    } finally {
+        await orm.close();
+    }
+}
+
 //to get userDTOById, it should be userMethod.toUserDTO(await userMethod.getUserById(id));

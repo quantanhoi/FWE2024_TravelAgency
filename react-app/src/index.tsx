@@ -7,6 +7,8 @@ import { BrowserRouter, Navigate, Route, RouteProps, Routes, useLocation } from 
 import LoginPage from './pages/auth/login';
 import { AuthProvider, useAuth } from './providers/authProvider'; 
 import UserProfilePage from './pages/userProfile/userProfile';
+import TripDetailPage from './pages/tripDetail/tripDetail';
+import RegisterPage from './pages/auth/register';
 
 // Create router to route pages
 // const router = createBrowserRouter([
@@ -40,7 +42,18 @@ export const router: RouteConfig[] = [
   {
     path: '/user',
     element: <UserProfilePage />,
-  }
+    isPrivate: true,
+  },
+  {
+    path: '/trip/:id',
+    element: <TripDetailPage />,
+    isPrivate: true,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
+  },
+  
 ];
 export interface AuthRequiredProps {
   to?: string;

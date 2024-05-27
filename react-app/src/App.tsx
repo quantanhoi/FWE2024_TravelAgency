@@ -3,56 +3,73 @@ import logo from './logo.svg';
 import './App.css';
 import { useAuth } from './providers/authProvider';
 import Navigator from './components/navbar';
+import { useNavigate } from 'react-router-dom';
+
 type TestButtonProps = {
-  onClick: () => void;  // Define onClick prop
+  onClick: () => void;
 };
-//In React, components communicate with each other through props. 
-//If you want a component to be able to perform an action that affects another component, 
-//you need to pass a function to the first component 
-//that it can call to perform the action. This function is usually passed as a prop
+
 const TestButton: React.FC<TestButtonProps> = ({ onClick }) => {
   return (
     <button onClick={onClick}>Click me</button>
   );
 };
-interface Reise {
-  // define the properties of a Reise object here
+
+export interface Reise {
   r_id: number;
   r_name: string;
   r_beschreibung: string;
   r_bild: string;
-  // etc.
 }
+
 function App() {
   const { accessToken } = useAuth();
   const [linkText, setLinkText] = useState('Learn React');
+  const [reiseList, setReiseList] = useState<Reise[]>([]);
+  const [searchParams, setSearchParams] = useState({ name: '', startDate: '', endDate: '' });
+  const navigate = useNavigate();
+
   const handleClick = () => {
     setLinkText(linkText === 'Learn React' ? "Don't Learn React" : 'Learn React');
   };
-  //useState is a Hook in React that lets you add state to your functional components. 
-  //It returns a pair: the current state value and a function that lets you update it. 
-  /* reiseList is the state variable, and setReiseList is the function that updates it.
-  useState([]) initializes reiseList as an empty array.
-  */
-  const [reiseList, setReiseList] = useState<Reise[]>([]);
 
+  const handleSearch = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/reise/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${accessToken}`
+        },
+        body: JSON.stringify({
+          name: searchParams.name,
+          startDate: searchParams.startDate,
+          endDate: searchParams.endDate
+        })
+      });
 
-  /* useEffect is a Hook in React that lets you perform side effects in function components.
-  side effects are actions that affect things outside the component, like fetching data from an API,
-  subscribing to a service, or updating the document title, or manipulating the DOM directly.
-  */
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setReiseList(data);
+    } catch (error) {
+      console.error('Error during search:', error);
+    }
+  };
+
+  const handleBookTrip = (id: number) => {
+    navigate(`/trip/${id}`);
+  };
+
   useEffect(() => {
     fetch('http://localhost:3001/api/reise', {
       headers: {
         'Authorization': `${accessToken}`
       }
     })
-      /*this line is a part of promise chain, fetch returns a promise resolves to the response object
-      representing tge response to the request made by fetch
-      */
       .then(response => response.json())
-      /* It receives the data parsed from the previous json() call. 
-      You can now use this data in your application.*/
       .then(data => {
         if (Array.isArray(data)) {
           setReiseList(data);
@@ -62,39 +79,51 @@ function App() {
       })
       .catch(error => console.error('Error:', error));
   }, [accessToken]);
+
   return (
     <div className="App">
       <header className="App-header">
         <Navigator />
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {linkText}
-        </a>
-        {/* In your case, you want the TestButton component 
-            to be able to change the text of a link in the App component. 
-            To do this, you pass a function (handleClick) from App 
-            to TestButton as a prop (onClick). When the button in 
-            TestButton is clicked, it calls the onClick function, 
-            which changes the link text in App. */}
-        <TestButton onClick={handleClick} />
-        {reiseList.map((reise: any) => {
-          console.log(reise.r_bild); // This will log the value of reise.r_bild to the console
-          return (
-            <div key={reise.r_id}>
-              <h2>{reise.r_name}</h2>
-              <p>{reise.r_beschreibung}</p>
-              <img src={`/assets/${reise.r_bild}`} alt={reise.r_name} />
-            </div>
-          );
-        })}
+        <img src={logo} className="App-logo vh6" alt="logo" />
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search by name"
+            value={searchParams.name}
+            onChange={(e) => setSearchParams({ ...searchParams, name: e.target.value })}
+            className = "font-size-3vh transparent-background white-text white-border margin10"
+          />
+          <input
+            type="date"
+            placeholder="Start Date"
+            value={searchParams.startDate}
+            onChange={(e) => setSearchParams({ ...searchParams, startDate: e.target.value })}
+            className = "font-size-3vh transparent-background white-text white-border margin10"
+            
+          />
+          <input
+            type="date"
+            placeholder="End Date"
+            value={searchParams.endDate}
+            onChange={(e) => setSearchParams({ ...searchParams, endDate: e.target.value })}
+            className = "font-size-3vh transparent-background white-text white-border margin10"
+          />
+          <button onClick={handleSearch}
+          className = "font-size-3vh transparent-background white-text white-border margin10">Search</button>
+        </div>
+        {reiseList.map((reise: Reise) => (
+          <div className="flex-column" key={reise.r_id}>
+            <h2 className="margin10 margin-top10vh">{reise.r_name}</h2>
+            <p>{reise.r_beschreibung}</p>
+            <img src={`/assets/${reise.r_bild}`} alt={reise.r_name} className="vh50" />
+            <button
+              className="margin10 white-text white-border transparent-background font-size-5vh"
+              onClick={() => handleBookTrip(reise.r_id)}
+            >
+              Book Trip
+            </button>
+          </div>
+        ))}
       </header>
     </div>
   );
