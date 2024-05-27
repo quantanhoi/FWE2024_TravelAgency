@@ -1,5 +1,8 @@
 Fortgeschrittene Webentwicklung Hausaufgaben mit Typescript (Backend) und React (Frontend)
-
+What is still missiing: 
+ -Role for user: ADMIN, USER
+ -Admin role can add and remove reise and reiseziel from database
+ -Frontend page for adding and remove Reise and Reiseziel from database
 ```
 tsc --init
 npm install @mikro-orm/core \
@@ -10,10 +13,31 @@ npm i --save-dev @types/express
 npm install --save-dev @types/jsonwebtoken
 npm install --save-dev @types/bcryptjs
 npm i --save-dev @types/cors
-
 ```
-Structure of the database (check out src/doc/ for SQL)
+Structure of the database (check out src/doc/ for SQL, Teilnehmer is replaced by UserData)
 ![database](src/doc/database.png)
+
+API Route:
+```
+reise/
+reise/:id
+reise/add
+reise/delete/:id
+reise/addReiseziel/:reiseId/:reisezielId
+reise/search
+reiseziel/
+reiseziel/:id
+reiseziel/add
+reiseziel/delete/:id
+user/register
+user/:id
+user/
+user/login
+user/reises
+user/reises/add/:id
+user/reises/remove/:id
+```
+
 
 
 Test data to add to Reiseziel
