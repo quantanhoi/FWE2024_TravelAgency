@@ -1,8 +1,12 @@
 Fortgeschrittene Webentwicklung Hausaufgaben mit Typescript (Backend) und React (Frontend)
 What is still missiing: 
  -Role for user: ADMIN, USER
+ 
  -Admin role can add and remove reise and reiseziel from database
+ 
  -Frontend page for adding and remove Reise and Reiseziel from database
+
+Initiate Database schema: using crebas.sql (for schema and trigger) and data.sql (for test data)
 ```
 tsc --init
 npm install @mikro-orm/core \
