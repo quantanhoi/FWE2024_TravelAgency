@@ -57,8 +57,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             body: JSON.stringify(body),
         });
         const resBody = await res.json();
+        if (!res.ok) {
+            alert('Failed to login');
+            return;
+        }
         setAccessToken(resBody.jwtToken);
-        console.log('Token: ', resBody.jwtToken);
         navigate('/');
     };
 

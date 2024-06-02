@@ -15,7 +15,6 @@ router.use(prepareAuthentication)
  */
 router.get('/', verifyAccess, async (req: Request, res: Response) => {
     try{
-        console.log("GET REISE");
         const reise: Reise[] = await ReiseMethod.getAllReise();
         res.json(reise);
     }

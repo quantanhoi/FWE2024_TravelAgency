@@ -11,7 +11,7 @@ export async function getAllReise(): Promise<Reise[]> {
     try{
         const em = orm.em.fork();
         const reise = await em.find(Reise, {}, {
-            populate: ['reiseziels'],  // Explicitly populate reiseziels
+            populate: ['reiseziels', 'zeitraum'],  // Explicitly populate reiseziels
             //IF NOT POPULATED, IT WILL NOT BE FETCHED
             strategy: LoadStrategy.JOINED  // Using JOIN strategy to fetch related entities
         });
