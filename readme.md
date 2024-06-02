@@ -13,17 +13,22 @@ password: admin
 newly register account will be client account, delete and add function in profile will not appear
 
 Initiate Database schema: using crebas.sql (for schema and trigger) and data.sql (for test data)
+
+Install the packages
 ```
-tsc --init
-npm install @mikro-orm/core \
-            @mikro-orm/sqlite \
-            @mikro-orm/reflection \
-            fastify
-npm i --save-dev @types/express
-npm install --save-dev @types/jsonwebtoken
-npm install --save-dev @types/bcryptjs
-npm i --save-dev @types/cors
+npm install
 ```
+
+Run backend app
+```
+ts-node src/app.ts
+```
+run react app
+```
+cd react-app
+npm start
+```
+
 Structure of the database (check out src/doc/ for SQL, Teilnehmer is replaced by UserData)
 ![database](src/doc/database.png)
 
