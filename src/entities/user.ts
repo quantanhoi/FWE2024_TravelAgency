@@ -14,6 +14,10 @@ export class UserData {
 
     @Property()
     u_password!: string;
+
+
+    @Property()
+    u_isadmin: boolean = false;
     
 
 

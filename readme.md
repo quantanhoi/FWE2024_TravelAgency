@@ -1,10 +1,16 @@
 Fortgeschrittene Webentwicklung Hausaufgaben mit Typescript (Backend) und React (Frontend)
 What is still missiing: 
- -Role for user: ADMIN, USER
- 
- -Admin role can add and remove reise and reiseziel from database
- 
- -Frontend page for adding and remove Reise and Reiseziel from database
+
+-Admin role can add  reise and reiseziel to database
+
+-Frontend page for adding Reise and Reiseziel to database 
+
+Testing account (for also delete trip from database): 
+```
+email: admin@admin.com
+password: admin
+```
+newly register account will be client account, delete and add function in profile will not appear
 
 Initiate Database schema: using crebas.sql (for schema and trigger) and data.sql (for test data)
 ```

@@ -2,7 +2,6 @@
 import React , {useEffect, useState}from 'react';
 
 import { useAuth } from '../../../providers/authProvider';
-import { useNavigate } from 'react-router-dom';
 
 
 interface Reise {
@@ -19,7 +18,6 @@ interface Zeitraum {
 const TripList: React.FC = () => {
     const {accessToken} = useAuth();
     const [trips, setTrips] = useState<Reise[] | null>(null);
-    const navigate = useNavigate();
 
     const handleCancelTrip = async (id: number) => {
         try{

@@ -106,6 +106,7 @@ CREATE TABLE userData(
 	u_email varchar(254) not null,
 	u_name varchar(254) not null,
 	u_password varchar(512) not null,
+   u_isAdmin boolean not null,
    UNIQUE(u_email),
    constraint PK_USERDATA primary key (u_id)
 );
@@ -152,32 +153,32 @@ create unique index ZEITRAUM_PK on Zeitraum (z_id);
 alter table
    Reise
 add
-   constraint FK_REISE_ASSOCIATI_ZEITRAUM foreign key (z_id) references Zeitraum (z_id) on delete restrict on update restrict;
+   constraint FK_REISE_ASSOCIATI_ZEITRAUM foreign key (z_id) references Zeitraum (z_id) on delete cascade on update restrict;
 
 alter table
    Reise_Reiseziel
 add
-   constraint FK_REISE_RE_ASSOCIATI_REISE foreign key (r_id) references Reise (r_id) on delete restrict on update restrict;
+   constraint FK_REISE_RE_ASSOCIATI_REISE foreign key (r_id) references Reise (r_id) on delete cascade on update restrict;
 
 alter table
    Reise_Reiseziel
 add
-   constraint FK_REISE_RE_ASSOCIATI_REISEZIE foreign key (rz_id) references Reiseziel (rz_id) on delete restrict on update restrict;
+   constraint FK_REISE_RE_ASSOCIATI_REISEZIE foreign key (rz_id) references Reiseziel (rz_id) on delete cascade on update restrict;
 
 alter table
    Reiseziel
 add
-   constraint FK_REISEZIE_ASSOCIATI_ZEITRAUM foreign key (z_id) references Zeitraum (z_id) on delete restrict on update restrict;
+   constraint FK_REISEZIE_ASSOCIATI_ZEITRAUM foreign key (z_id) references Zeitraum (z_id) on delete cascade on update restrict;
 
 alter table
    User_Reise
 add
-   constraint FK_USER_REISE_ASSOCIATI_REISE foreign key (r_id) references Reise (r_id) on delete restrict on update restrict;
+   constraint FK_USER_REISE_ASSOCIATI_REISE foreign key (r_id) references Reise (r_id) on delete cascade on update restrict;
 
 alter table
    User_Reise
 add
-   constraint FK_USER_REISE_ASSOCIATI_USERDATA foreign key (u_id) references userData (u_id) on delete restrict on update restrict;
+   constraint FK_USER_REISE_ASSOCIATI_USERDATA foreign key (u_id) references userData (u_id) on delete cascade on update restrict;
 
 CREATE OR REPLACE FUNCTION update_zeitraum()
 RETURNS TRIGGER AS $$

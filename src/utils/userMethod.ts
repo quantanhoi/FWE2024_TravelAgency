@@ -39,7 +39,7 @@ export async function pushUser(user: UserData): Promise<boolean> {
 
 export function toUserDTO(user: UserData|null): UserDTO|null {
     if(user) {
-        return new UserDTO(user.u_id, user.u_email, user.u_name);
+        return new UserDTO(user.u_id, user.u_email, user.u_name, user.u_isadmin);
     }
     else {
         return null;

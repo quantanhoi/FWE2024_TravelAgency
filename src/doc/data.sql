@@ -37,6 +37,9 @@ INSERT INTO Reise_Reiseziel (r_id, rz_id) VALUES
 (1, 4);
 
 
+--password: admin
+INSERT INTO userData (u_email, u_name, u_password, u_isAdmin) VALUES
+('admin@admin.com', 'Admin', '$2a$12$FPnecWIYqu3wkzn7TyxcxO8SVZFGnmD/..lxKKo6KWJcMZtrDm48y', true);
 
 
 
